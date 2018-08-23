@@ -5,13 +5,17 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.ReadableType;
+import com.facebook.react.bridge.WritableArray;
+import com.facebook.react.bridge.WritableMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -91,5 +95,68 @@ public class Utils {
             }
         }
         return deconstructedList;
+    }
+
+    static WritableMap recursivelyConstructWritableMap(Map<String, Object> map) {
+        WritableMap data = Arguments.createMap();
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            String key = iterator.next();
+            Object value = map.get(key);
+            switch (value.getClass().getName()) {
+                case "java.lang.Boolean":
+                    data.putBoolean(key, (Boolean) value);
+                    break;
+                case "java.lang.Integer":
+                    data.putInt(key, (Integer) value);
+                    break;
+                case "java.lang.Double":
+                    data.putDouble(key, (Double) value);
+                    break;
+                case "java.lang.String":
+                    data.putString(key, (String) value);
+                    break;
+                case "java.util.Map":
+                    data.putMap(key, recursivelyConstructWritableMap((Map<String, Object>) value));
+                    break;
+                case "java.util.ArrayList":
+                    data.putArray(key, recursivelyConstructWritableArray((ArrayList<Object>) value));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Failed to convert HashMap with unrecognized value of class name: " + value.getClass().getName());
+            }
+        }
+        return data;
+    }
+
+    public static WritableArray recursivelyConstructWritableArray(ArrayList<Object> list) {
+        WritableArray writableList = Arguments.createArray();
+        for (int i = 0; i < list.size(); i++) {
+            Object value = list.get(i);
+            String type = value.getClass().getName();
+            switch(type) {
+                case "java.lang.Boolean":
+                    writableList.pushBoolean((Boolean) value);
+                    break;
+                case "java.lang.Integer":
+                    writableList.pushInt((Integer) value);
+                    break;
+                case "java.lang.Double":
+                    writableList.pushDouble((Double) value);
+                    break;
+                case "java.lang.String":
+                    writableList.pushString((String) value);
+                    break;
+                case "java.util.Map":
+                    writableList.pushMap(recursivelyConstructWritableMap((Map<String, Object>) value));
+                    break;
+                case "java.util.ArrayList":
+                    writableList.pushArray(recursivelyConstructWritableArray((ArrayList<Object>) value));
+                    break;
+                default:
+                    throw new IllegalArgumentException("Failed to convert ArrayList with unrecognized value of class name: " + value.getClass().getName());
+            }
+        }
+        return writableList;
     }
 }
