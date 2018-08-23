@@ -1,6 +1,7 @@
 
 package com.pranjal;
 
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,9 +13,15 @@ import com.facebook.react.uimanager.ViewManager;
 import com.facebook.react.bridge.JavaScriptModule;
 
 public class RNCloudinaryPackage implements ReactPackage {
+    private URL mSignatureUrl;
+
+    public RNCloudinaryPackage(URL signatureUrl) {
+        this.mSignatureUrl = signatureUrl;
+    }
+
     @Override
     public List<NativeModule> createNativeModules(ReactApplicationContext reactContext) {
-        return Arrays.<NativeModule>asList(new RNCloudinaryModule(reactContext));
+        return Arrays.<NativeModule>asList(new RNCloudinaryModule(reactContext, mSignatureUrl));
     }
 
     // Deprecated from RN 0.47
