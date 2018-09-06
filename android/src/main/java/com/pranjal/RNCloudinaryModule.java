@@ -17,6 +17,7 @@ import com.facebook.react.bridge.ReadableMap;
 import org.json.JSONObject;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 import okhttp3.OkHttpClient;
@@ -44,6 +45,20 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "RNCloudinary";
+    }
+
+    @Override
+    public Map<String, Object> getConstants() {
+        final Map<String, Object> constants = new HashMap<String, Object>() {{
+            put("UPLOAD_EVENT", new HashMap<String, String>() {{
+                put("START", UploadListener.START_EVENT);
+                put("PROGRESS", UploadListener.PROGRESS_EVENT);
+                put("SUCCESS", UploadListener.SUCCESS_EVENT);
+                put("ERROR", UploadListener.ERROR_EVENT);
+                put("RESCHEDULE", UploadListener.RESCHEDULE_EVENT);
+            }});
+        }};
+        return constants;
     }
 
     @ReactMethod

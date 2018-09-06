@@ -13,11 +13,11 @@ import java.util.Map;
 
 public class UploadListener implements UploadCallback {
 
-    public static final String START_EVENT_PREFIX = "cloudinary:upload:start:";
-    public static final String PROGRESS_EVENT_PREFIX = "cloudinary:upload:progress:";
-    public static final String SUCCESS_EVENT_PREFIX = "cloudinary:upload:success:";
-    public static final String ERROR_EVENT_PREFIX = "cloudinary:upload:error:";
-    public static final String RESCHEDULE_EVENT_PREFIX = "cloudinary:upload:reschedule:";
+    public static final String START_EVENT = "cloudinary:upload:start";
+    public static final String PROGRESS_EVENT = "cloudinary:upload:progress";
+    public static final String SUCCESS_EVENT = "cloudinary:upload:success";
+    public static final String ERROR_EVENT = "cloudinary:upload:error";
+    public static final String RESCHEDULE_EVENT = "cloudinary:upload:reschedule";
 
     private ReactApplicationContext mReactContext;
 
@@ -25,41 +25,44 @@ public class UploadListener implements UploadCallback {
         this.mReactContext = reactContext;
     }
 
-    private void emit(String message, Object data) {
+    private void emit(String eventKey, Object data) {
         DeviceEventManagerModule.RCTDeviceEventEmitter emitter = mReactContext.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class);
-        emitter.emit(message, data);
+        emitter.emit(eventKey, data);
     }
 
-    private void sendError(String eventPrefix, String requestId, ErrorInfo error) {
+    private void sendError(String eventKey, String requestId, ErrorInfo error) {
         WritableMap errorData = Arguments.createMap();
+        errorData.putString("requestId", requestId);
         errorData.putInt("code", error.getCode());
         errorData.putString("description", error.getDescription());
-        emit(eventPrefix.concat(requestId), errorData);
+        emit(eventKey, errorData);
     }
 
     @Override
     public void onStart(String requestId) {
-        emit(START_EVENT_PREFIX.concat(requestId), null);
+        emit(START_EVENT, requestId);
     }
     @Override
     public void onProgress(String requestId, long bytes, long totalBytes) {
         Double progress = (double) bytes/totalBytes;
         WritableMap progressData = Arguments.createMap();
+        progressData.putString("requestId", requestId);
         progressData.putDouble("bytes", bytes);
         progressData.putDouble("totalBytes", totalBytes);
-        emit(PROGRESS_EVENT_PREFIX.concat(requestId), progressData);
+        emit(PROGRESS_EVENT, progressData);
     }
     @Override
     public void onSuccess(String requestId, Map resultData) {
         WritableMap successData = Utils.recursivelyConstructWritableMap(resultData);
-        emit(SUCCESS_EVENT_PREFIX + requestId, successData);
+        successData.putString("requestId", requestId);
+        emit(SUCCESS_EVENT, successData);
     }
     @Override
     public void onError(String requestId, ErrorInfo error) {
-        sendError(ERROR_EVENT_PREFIX, requestId, error);
+        sendError(ERROR_EVENT, requestId, error);
     }
     @Override
     public void onReschedule(String requestId, ErrorInfo error) {
-        sendError(RESCHEDULE_EVENT_PREFIX, requestId, error);
+        sendError(RESCHEDULE_EVENT, requestId, error);
     }
 }
