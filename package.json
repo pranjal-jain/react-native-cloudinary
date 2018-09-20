@@ -1,10 +1,13 @@
 {
   "name": "react-native-cloudinary",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "A react native module for uploading files to cloudinary",
+  "main": "lib/index.js",
+  "files": [
+    "lib"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel src --out-dir lib --source-maps"
   },
   "keywords": [
     "react-native"
@@ -14,7 +17,15 @@
   "peerDependencies": {
     "react-native": ">= 0.56.0"
   },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "devDependencies": {
+    "@babel/cli": "^7.1.0",
+    "@babel/core": "^7.1.0",
+    "commitizen": "^2.10.1",
     "prettier": "^1.14.2",
     "react-native": "^0.56.0",
     "typescript": "^3.0.3"
