@@ -53,16 +53,24 @@ export default class UploadRequest {
     return this;
   }
 
+  clearListeners() {
+    this.onStart = noop
+    this.onProgress = noop
+    this.onSuccess = noop
+    this.onError = noop
+  }
+
   getRequestId() {
     return this.requestId;
   }
 
-  async dispatch() {
-    this.requestId = await RNCloudinary.upload(
+  dispatch() {
+    this.requestId = RNCloudinary.upload(
       this.filePath,
       this.authToken,
       this.options,
       this.policy
     );
+    return this;
   }
 }
