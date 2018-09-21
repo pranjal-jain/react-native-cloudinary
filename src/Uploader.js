@@ -10,8 +10,8 @@ export default class Uploader {
 
   constructor() {throw new Error("Uploader cannot be initialized");}
 
-  static init(filePath) {
-    const uploadRequest = new UploadRequest(filePath);
+  static init(filePath, authToken, listeners, options, policy) {
+    const uploadRequest = new UploadRequest(filePath, authToken, listeners, options, policy);
     Uploader.uploadRequests.push(uploadRequest);
     Uploader.startListening()
   }
@@ -26,10 +26,10 @@ export default class Uploader {
     uploadRequest.onStart()
   }
 
-  static onProgress(requestId, progressData) {
+  static onProgress({requestId, bytes, totalBytes}) {
     const uploadRequest = Uploader.getUploadRequest(requestId)
     if (!uploadRequest) return
-    uploadRequest.onProgress(progressData)
+    uploadRequest.onProgress(bytes, totalBytes)
   }
 
   static onSuccess(requestId) {
@@ -39,10 +39,10 @@ export default class Uploader {
     uploadRequest.onSuccess()
   }
 
-  static onError(requestId, error) {
+  static onError({requestId, code, description}) {
     const uploadRequest = Uploader.getUploadRequest(requestId)
     if (!uploadRequest) return
-    uploadRequest.onError()
+    uploadRequest.onError(new UploadError(code, description))
   }
 
   static startListening() {
@@ -91,9 +91,13 @@ export default class Uploader {
 }
 
 class UploadError extends Error {
-  code;
   constructor(code, message) {
     super(message)
     this.code = code;
+    this.name = "RNCloudinaryUploadError"
+  }
+
+  getCode() {
+    return this.code
   }
 }
