@@ -32,7 +32,25 @@
 ```javascript
 import RNCloudinary from 'react-native-cloudinary';
 
-// TODO: What to do with the module?
-RNCloudinary;
+try {
+ const uploadRequest = await RNCloudinary
+  .init(filePath, authToken)
+  .setOptions(options) // Set cloudinary options (Optional)
+  .setPolicy(policy) // Set upload policy options (Optional)
+  .setListeners({
+    onStart: () => { // Do something on upload start },
+    onProgress: (bytes, totalBytes) => { // Show upload progress },
+    onSuccess: () => { // Do something on success },
+    onError: (e) => { // Handle upload time error }
+  })
+  .dispatch()
+} catch (e) {
+  // Handle init error
+}
+
+
+
+
+uploadRequest.clearListeners() // Clears listeners
 ```
   
