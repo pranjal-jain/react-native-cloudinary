@@ -23,3 +23,6 @@ local.properties
 buck-out/
 \.buckd/
 *.keystore
+
+# Build folder
+lib
