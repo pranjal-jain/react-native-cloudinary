@@ -64,8 +64,8 @@ export default class UploadRequest {
     return this.requestId;
   }
 
-  dispatch() {
-    this.requestId = RNCloudinary.upload(
+  async dispatch() {
+    this.requestId = await RNCloudinary.upload(
       this.filePath,
       this.authToken,
       this.options,

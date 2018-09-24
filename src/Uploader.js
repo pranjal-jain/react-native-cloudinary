@@ -14,6 +14,7 @@ export default class Uploader {
     const uploadRequest = new UploadRequest(filePath, authToken, listeners, options, policy);
     Uploader.uploadRequests.push(uploadRequest);
     Uploader.startListening()
+    return uploadRequest
   }
 
   static getUploadRequest(requestId) {
@@ -32,11 +33,11 @@ export default class Uploader {
     uploadRequest.onProgress(bytes, totalBytes)
   }
 
-  static onSuccess(requestId) {
+  static onSuccess({requestId, ...response}) {
     const uploadRequest = Uploader.getUploadRequest(requestId)
     if (!uploadRequest) return
     Uploader.removeRequest(uploadRequest)
-    uploadRequest.onSuccess()
+    uploadRequest.onSuccess(response)
   }
 
   static onError({requestId, code, description}) {
