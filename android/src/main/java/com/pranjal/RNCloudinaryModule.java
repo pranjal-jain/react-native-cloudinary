@@ -26,6 +26,7 @@ import okhttp3.Response;
 
 public class RNCloudinaryModule extends ReactContextBaseJavaModule {
     private UploadListener mUploadListener;
+    private String authToken;
 
     RNCloudinaryModule(ReactApplicationContext reactContext, URL signatureUrl) {
         super(reactContext);
@@ -62,8 +63,9 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void upload(String path, ReadableMap options, ReadableMap policyMap, Promise promise) {
+    public void upload(String path, String authToken, ReadableMap options, ReadableMap policyMap, Promise promise) {
         try {
+            this.authToken = authToken;
             Uri uri = Uri.parse(path);
             UploadRequest uploadRequest = MediaManager
                     .get()
@@ -101,6 +103,7 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
             OkHttpClient client = new OkHttpClient();
             Request.Builder builder = new Request.Builder();
             builder.url(mSignatureUrl);
+            builder.addHeader("auth_token", authToken);
             Request request = builder.build();
 
             try {
