@@ -1,10 +1,13 @@
 {
-  "name": "react-native-cloudinary",
-  "version": "1.0.0",
+  "name": "@anarock/react-native-cloudinary",
+  "version": "0.1.2-alpha.4",
   "description": "A react native module for uploading files to cloudinary",
   "main": "lib/index.js",
   "files": [
-    "lib"
+    "lib",
+    "android/src/main/AndroidManifest.xml",
+    "android/src/main/java/",
+    "android/build.gradle"
   ],
   "scripts": {
     "build": "babel src --out-dir lib --source-maps"
