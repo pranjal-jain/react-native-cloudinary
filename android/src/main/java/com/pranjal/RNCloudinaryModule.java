@@ -34,13 +34,17 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
     }
 
     public void init(URL signatureUrl) {
-        RNCloudinarySignatureProvider signatureProvider = new RNCloudinarySignatureProvider(signatureUrl);
+        RNCloudinarySignatureProvider signatureProvider = new RNCloudinarySignatureProvider(signatureUrl, this);
         mUploadListener = new UploadListener(getReactApplicationContext());
         try {
             MediaManager.init(getReactApplicationContext(), signatureProvider);
         } catch (IllegalStateException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getAuthToken() {
+        return this.authToken;
     }
 
     @Override
@@ -93,9 +97,11 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
                 .build();
     }
 
-    private class RNCloudinarySignatureProvider implements SignatureProvider {
+    private static class RNCloudinarySignatureProvider implements SignatureProvider {
         private URL mSignatureUrl;
-        RNCloudinarySignatureProvider(URL signatureUrl) {
+        private RNCloudinaryModule mContext;
+        RNCloudinarySignatureProvider(URL signatureUrl, RNCloudinaryModule context) {
+            this.mContext = context;
             this.mSignatureUrl = signatureUrl;
         }
         @Override
@@ -103,7 +109,7 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
             OkHttpClient client = new OkHttpClient();
             Request.Builder builder = new Request.Builder();
             builder.url(mSignatureUrl);
-            builder.addHeader("auth_token", authToken);
+            builder.addHeader("auth_token", mContext.getAuthToken());
             Request request = builder.build();
 
             try {
