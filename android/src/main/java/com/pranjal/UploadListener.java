@@ -4,11 +4,10 @@ import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.pranjal.utils.MapUtils;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class UploadListener implements UploadCallback {
@@ -53,7 +52,7 @@ public class UploadListener implements UploadCallback {
     }
     @Override
     public void onSuccess(String requestId, Map resultData) {
-        WritableMap successData = Utils.recursivelyConstructWritableMap(resultData);
+        WritableMap successData = MapUtils.toWritableMap(resultData);
         successData.putString("requestId", requestId);
         emit(SUCCESS_EVENT, successData);
     }
