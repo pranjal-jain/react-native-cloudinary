@@ -34,7 +34,7 @@ import RNCloudinary from 'react-native-cloudinary';
 
 try {
  const uploadRequest = await RNCloudinary
-  .init(filePath, authToken)
+  .init(filePath)
   .setOptions(options) // Set cloudinary options (Optional)
   .setPolicy(policy) // Set upload policy options (Optional)
   .setListeners({

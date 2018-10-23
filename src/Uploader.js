@@ -10,8 +10,8 @@ export default class Uploader {
 
   constructor() {throw new Error("Uploader cannot be initialized");}
 
-  static init(filePath, authToken, listeners, options, policy) {
-    const uploadRequest = new UploadRequest(filePath, authToken, listeners, options, policy);
+  static init(filePath, listeners, options, policy) {
+    const uploadRequest = new UploadRequest(filePath, listeners, options, policy);
     Uploader.uploadRequests.push(uploadRequest);
     Uploader.startListening()
     return uploadRequest
