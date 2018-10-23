@@ -55,6 +55,6 @@ def supportVersion = rootProject.hasProperty('supportLibVersion') ? rootProject.
 dependencies {
     api 'com.facebook.react:react-native:+'
     api "com.android.support:support-v4:$supportVersion"
-    implementation 'com.cloudinary:cloudinary-android:1.24.1'
+    api 'com.cloudinary:cloudinary-android:1.24.1'
 }
   
