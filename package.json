@@ -1,6 +1,6 @@
 {
   "name": "@anarock/react-native-cloudinary",
-  "version": "0.2.0",
+  "version": "1.0.0-beta.0",
   "description": "A react native module for uploading files to cloudinary",
   "main": "lib/index.js",
   "files": [
