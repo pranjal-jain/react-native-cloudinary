@@ -3,6 +3,7 @@ package com.pranjal;
 
 import android.net.Uri;
 
+import com.cloudinary.Configuration;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.UploadRequest;
 import com.cloudinary.android.policy.UploadPolicy;
@@ -57,9 +58,12 @@ public class RNCloudinaryModule extends ReactContextBaseJavaModule {
     public void upload(String path, ReadableMap options, ReadableMap uploadPolicy, Promise promise) {
         try {
             Uri uri = Uri.parse(path);
-            UploadRequest uploadRequest = MediaManager
-                    .get()
-                    .upload(uri);
+            String cloudinaryUrl = options.getString("cloudinaryUrl");
+            if (null != cloudinaryUrl) {
+                Map<String, Object> cloudinaryConfig = Configuration.from(options.getString("cloudinaryUrl")).asMap();
+                MediaManager.get().getCloudinary().config.update(cloudinaryConfig);
+            }
+            UploadRequest uploadRequest = MediaManager.get().upload(uri);
             if (uploadPolicy != null) {
                 uploadRequest = uploadRequest.policy(getUploadPolicy(uploadPolicy));
             }
